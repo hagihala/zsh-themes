@@ -1,4 +1,4 @@
-# mytheme.zsh-theme
+# yshh.zsh-theme
 # vim:set ft=zsh:
 
 # Detect and print edit mode (for Vim keybind)
@@ -24,23 +24,20 @@ zle -N zle-keymap-select
 function rprompt-git-current-branch {
     local name st color
 
-    if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
-        return
-    fi
-    name=$(basename "`git symbolic-ref HEAD 2>/dev/null`")
-    if [[ -z $name ]]; then
-        return
-    fi
-    st=`git status 2>/dev/null`
-    if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
-        color=${fg[green]}
-    elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
-        color=${fg[yellow]}
-    elif [[ -n `echo "$st" | grep "^# Untracked"` ]]; then
-        color=${fg_bold[red]}
-    else
+    [[ "$PWD" =~ '/\.git(/.*)?$' ]] && return
+
+    name=$(basename "$(git symbolic-ref HEAD 2>/dev/null)")
+    [[ -z "$name" ]] && return
+
+    st=$(git status -s 2>/dev/null)
+    if [[ "$st" =~ '^ *(M|A|D|R|C|U)' ]]; then
         color=${fg[red]}
+    elif [[ "$st" =~ '^\\?\\?' ]]; then
+        color=${fg[yellow]}
+    else
+        color=${fg[green]}
     fi
+
     desc=$(git describe --abbrev=1 2>&/dev/null)
 
     echo "%{$color%}$name($desc)%{$reset_color%} "
