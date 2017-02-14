@@ -32,7 +32,7 @@ function rprompt-git-current-branch {
     st=$(git status -s 2>/dev/null)
     if [[ "$st" =~ '^ *(M|A|D|R|C|U)' ]]; then
         color=${fg[red]}
-    elif [[ "$st" =~ '^\\?\\?' ]]; then
+    elif [[ "$st" =~ '^\?\?' ]]; then
         color=${fg[yellow]}
     else
         color=${fg[green]}
